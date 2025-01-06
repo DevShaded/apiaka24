@@ -31,7 +31,7 @@ class AuthorResource extends Resource
 
     protected static ?string $slug = 'authors';
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-user-group';
 
     public static function form(Form $form): Form
     {
@@ -43,18 +43,15 @@ class AuthorResource extends Resource
                             ->schema([
                                 TextInput::make('name')
                                     ->required()
-                                    ->live()
-                                    ->afterStateUpdated(function (Get $get, Set $set, ?string $old, ?string $state) {
-                                        if (($get('slug') ?? '') !== Str::slug($old)) {
-                                            return;
-                                        }
-
+                                    ->live(onBlur: true)
+                                    ->afterStateUpdated(function (Set $set, $state) {
                                         $set('slug', Str::slug($state));
                                     }),
 
                                 TextInput::make('slug')
                                     ->required()
-                                    ->unique(Category::class, 'slug', fn ($record) => $record),
+                                    ->helperText('This will be automatically generated if left empty.')
+                                    ->unique(Author::class, 'slug', fn ($record) => $record),
                             ])
                             ->columns(2),
 
