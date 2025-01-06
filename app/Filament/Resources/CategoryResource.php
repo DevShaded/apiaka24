@@ -27,33 +27,28 @@ class CategoryResource extends Resource
 
     protected static ?string $slug = 'categories';
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-square-3-stack-3d';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Section::make()
+                    ->columns(1)
                     ->schema([
                         TextInput::make('name')
                             ->required()
-                            ->live()
-                            ->afterStateUpdated(function (Get $get, Set $set, ?string $old, ?string $state) {
-                                if (($get('slug') ?? '') !== Str::slug($old)) {
-                                    return;
-                                }
-
+                            ->live(onBlur: true)
+                            ->afterStateUpdated(function (Set $set, $state) {
                                 $set('slug', Str::slug($state));
                             }),
 
                         TextInput::make('slug')
                             ->required()
+                            ->helperText('This will be automatically generated if left empty.')
                             ->unique(Category::class, 'slug', fn ($record) => $record),
 
                         TextInput::make('description'),
-
-                        Toggle::make('is_published')
-                            ->default(false),
                     ])
                     ->columns([
                         'sm' => 2,
@@ -61,6 +56,9 @@ class CategoryResource extends Resource
                     ->columnSpan(2),
                 Section::make()
                     ->schema([
+                        Toggle::make('is_published')
+                            ->default(false),
+
                         Placeholder::make('created_at')
                             ->content(fn (?Category $record): string => $record ? $record->created_at->diffForHumans() : '-'),
                         Placeholder::make('updated_at')
