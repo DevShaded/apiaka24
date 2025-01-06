@@ -13,11 +13,14 @@ use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Resources\Resource;
+use Filament\Support\Enums\FontWeight;
 use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\Layout\Split;
+use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
@@ -86,20 +89,31 @@ class AuthorResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name')
-                    ->searchable()
-                    ->sortable(),
+                Split::make([
+                    ImageColumn::make('avatar')
+                        ->grow(false)
+                        ->circular(),
+                    TextColumn::make('name')
+                        ->weight(FontWeight::Bold)
+                        ->searchable()
+                        ->sortable(),
 
-                ImageColumn::make('avatar')
-                    ->circular(),
+                    Stack::make([
+                        TextColumn::make('phone')
+                            ->icon('heroicon-s-phone')
+                            ->searchable()
+                            ->sortable(),
 
-                TextColumn::make('phone'),
+                        TextColumn::make('email')
+                            ->icon('heroicon-s-envelope')
+                            ->searchable()
+                            ->sortable(),
+                    ]),
 
-                TextColumn::make('email')
-                    ->searchable()
-                    ->sortable(),
-
-                TextColumn::make('bio'),
+                    TextColumn::make('bio')
+                        ->limit(100)
+                        ->visibleFrom('md')
+                ])->from('md'),
             ])
             ->filters([
                 //
