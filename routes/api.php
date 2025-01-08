@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PostController;
 use Illuminate\Http\Request;
@@ -20,3 +21,4 @@ Route::get('/', function () {
 
 Route::resource('/posts', PostController::class)->only(['index', 'show']);
 Route::resource('/categories', CategoryController::class)->only(['index', 'show']);
+Route::resource('/authors', AuthorController::class)->only(['index', 'show']);
