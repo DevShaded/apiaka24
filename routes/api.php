@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PostController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -15,3 +16,5 @@ Route::get('/', function () {
         'version' =>  '1.0.0'
     ], 200);
 });
+
+Route::resource('/posts', PostController::class)->only(['index', 'show']);
