@@ -16,6 +16,13 @@ class PostController extends Controller
                 ->get();
         });
 
+        if (!$posts) {
+            return response()->json([
+                'status' => false,
+                'message' => 'No posts found'
+            ], 404);
+        }
+
         return response()->json([
             'status' => true,
             'data' => [
@@ -32,6 +39,13 @@ class PostController extends Controller
                 ->where('is_published', true)
                 ->firstOrFail();
         });
+
+        if (!$post) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Post not found'
+            ], 404);
+        }
 
         return response()->json([
             'status' => true,
